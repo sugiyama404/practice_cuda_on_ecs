@@ -45,6 +45,7 @@ module "ec2" {
   instance_profile_name = module.iam.instance_profile_name
   public_subnet_1a_id   = module.network.public_subnet_1a_id
   sg_ecs_id             = module.network.sg_ecs_id
+  ecs_cluster_name      = module.ecs.ecs_cluster_name
 }
 
 # ECS
@@ -52,5 +53,5 @@ module "ecs" {
   source                   = "./modules/ecs"
   app_name                 = var.app_name
   ecs_instance_profile_arn = module.iam.ecs_instance_profile_arn
-  ai_repository_url        = module.ecr.repository_url
+  ai_repository_url        = module.ecr.ai_repository_url
 }

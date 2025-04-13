@@ -7,9 +7,8 @@ resource "aws_key_pair" "keypair" {
   }
 }
 
-# EC2インスタンス（aws_autoscaling_groupの代わりにaws_instanceを使用）
 resource "aws_instance" "ecs_gpu_instance" {
-  ami                    = data.aws_ami.dlami_pytorch.id
+  ami                    = data.aws_ami.app.id
   instance_type          = "g4dn.xlarge"
   subnet_id              = var.public_subnet_1a_id
   vpc_security_group_ids = [var.sg_ecs_id]
@@ -24,9 +23,18 @@ resource "aws_instance" "ecs_gpu_instance" {
 
   user_data = <<-EOF
     #!/bin/bash
-    echo ECS_CLUSTER=${aws_ecs_cluster.gpu_cluster.name} >> /etc/ecs/ecs.config
+    echo ECS_CLUSTER=${var.ecs_cluster_name} >> /etc/ecs/ecs.config
     echo ECS_ENABLE_GPU_SUPPORT=true >> /etc/ecs/ecs.config
   EOF
+
+  instance_market_options {
+    market_type = "spot"
+
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
 
   tags = {
     Name = "gpu-ecs-instance"
