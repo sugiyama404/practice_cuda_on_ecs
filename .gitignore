@@ -260,6 +260,7 @@ terraform.rc
 id_rsa
 id_rsa.pub
 *.pem
+*.pub
 *.key
 .ssh/
 

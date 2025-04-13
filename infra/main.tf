@@ -18,22 +18,39 @@ module "iam" {
   app_name = var.app_name
 }
 
-# Lambda
-module "lambda" {
-  source              = "./modules/lambda"
-  app_name            = var.app_name
-  lambda_iam_role_arn = module.iam.lambda_iam_role_arn
+# Network
+module "network" {
+  source   = "./modules/network"
+  app_name = var.app_name
 }
 
-# sagemaker
-module "sagemaker" {
-  source                 = "./modules/sagemaker"
-  app_name               = var.app_name
-  sagemaker_iam_role_arn = module.iam.sagemaker_iam_role_arn
-  s3-ml-data-bucket      = module.s3.s3-ml-data-bucket
+# ECR
+module "ecr" {
+  source     = "./modules/ecr"
+  app_name   = var.app_name
+  image_name = var.image_name
 }
-# S3
-module "s3" {
-  source   = "./modules/s3"
-  app_name = var.app_name
+
+# bash
+module "bash" {
+  source     = "./modules/bash"
+  image_name = var.image_name
+  region     = var.region
+}
+
+# EC2
+module "ec2" {
+  source                = "./modules/ec2"
+  app_name              = var.app_name
+  instance_profile_name = module.iam.instance_profile_name
+  public_subnet_1a_id   = module.network.public_subnet_1a_id
+  sg_ecs_id             = module.network.sg_ecs_id
+}
+
+# ECS
+module "ecs" {
+  source                   = "./modules/ecs"
+  app_name                 = var.app_name
+  ecs_instance_profile_arn = module.iam.ecs_instance_profile_arn
+  ai_repository_url        = module.ecr.repository_url
 }
