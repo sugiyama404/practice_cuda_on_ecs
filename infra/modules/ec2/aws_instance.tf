@@ -25,6 +25,12 @@ resource "aws_instance" "ecs_gpu_instance" {
 #!/bin/bash
 echo ECS_CLUSTER=${var.ecs_cluster_name} >> /etc/ecs/ecs.config
 echo ECS_ENABLE_GPU_SUPPORT=true >> /etc/ecs/ecs.config
+
+# GPUドライバーの確認と初期化
+/usr/bin/nvidia-smi
+
+# ECSエージェントを再起動して新しい設定を適用
+systemctl restart ecs
 EOF
 
   instance_market_options {
