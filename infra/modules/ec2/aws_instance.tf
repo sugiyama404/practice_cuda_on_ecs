@@ -22,10 +22,10 @@ resource "aws_instance" "ecs_gpu_instance" {
   }
 
   user_data = <<-EOF
-    #!/bin/bash
-    echo ECS_CLUSTER=${var.ecs_cluster_name} >> /etc/ecs/ecs.config
-    echo ECS_ENABLE_GPU_SUPPORT=true >> /etc/ecs/ecs.config
-  EOF
+#!/bin/bash
+echo ECS_CLUSTER=${var.ecs_cluster_name} >> /etc/ecs/ecs.config
+echo ECS_ENABLE_GPU_SUPPORT=true >> /etc/ecs/ecs.config
+EOF
 
   instance_market_options {
     market_type = "spot"

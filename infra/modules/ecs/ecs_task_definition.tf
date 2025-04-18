@@ -11,8 +11,8 @@ resource "aws_ecs_task_definition" "pytorch_gpu_task" {
       name      = "pytorch-gpu-container"
       image     = "${var.ai_repository_url}:latest"
       essential = true
-      cpu       = 1024,
-      memory    = 2048,
+      cpu       = 4096,
+      memory    = 16384,
 
       resourceRequirements = [
         {

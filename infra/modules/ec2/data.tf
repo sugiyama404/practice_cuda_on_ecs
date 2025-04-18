@@ -1,11 +1,12 @@
 data "aws_ami" "app" {
   most_recent = true
-  owners      = ["self", "amazon"]
+  owners      = ["amazon"]
 
   filter {
     name   = "name"
-    values = ["Deep Learning AMI GPU PyTorch*"]
+    values = ["Deep Learning Base OSS Nvidia Driver GPU AMI *"]
   }
+
   filter {
     name   = "architecture"
     values = ["x86_64"]
@@ -14,5 +15,10 @@ data "aws_ami" "app" {
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
   }
 }

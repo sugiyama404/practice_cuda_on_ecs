@@ -8,4 +8,8 @@ resource "aws_ecs_service" "pytorch_gpu_service" {
   deployment_controller {
     type = "ECS"
   }
+  placement_constraints {
+    type       = "memberOf"
+    expression = "attribute:ecs.capability.gpu == true"
+  }
 }
