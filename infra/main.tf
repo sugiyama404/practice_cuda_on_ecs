@@ -32,11 +32,11 @@ module "ecr" {
 }
 
 # bash
-# module "bash" {
-#   source     = "./modules/bash"
-#   image_name = var.image_name
-#   region     = var.region
-# }
+module "bash" {
+  source     = "./modules/bash"
+  image_name = var.image_name
+  region     = var.region
+}
 
 # EC2
 module "ec2" {

@@ -18,23 +18,31 @@ resource "aws_launch_template" "ecs_gpu_launch_template" {
 #!/bin/bash
 set -euo pipefail
 
-echo "===== Installing ecs-init (if missing) ====="
-if ! rpm -q ecs-init >/dev/null 2>&1; then
-  yum install -y ecs-init
-fi
-
-echo "===== Writing ECS config ====="
+# ECSクラスター設定を作成
 cat <<EOT > /etc/ecs/ecs.config
 ECS_CLUSTER=chatbot-cluster
 ECS_ENABLE_GPU_SUPPORT=true
 EOT
 
-echo "===== Enabling and starting ECS agent ====="
-sudo systemctl stop ecs
-sudo systemctl enable --now ecs
+# cloud-initの完了を待つためのマーカーファイルを作成
+cat <<'EOT' > /usr/local/bin/start-ecs.sh
+#!/bin/bash
+# ECSサービスを再起動
+systemctl stop ecs || true
+systemctl enable ecs
+systemctl start ecs
+EOT
+
+chmod +x /usr/local/bin/start-ecs.sh
+
+# cloud-init完了後に実行するように設定
+cat <<'EOT' > /etc/cloud/cloud.final.d/99-start-ecs.cfg
+#cloud-config
+runcmd:
+  - [ /usr/local/bin/start-ecs.sh ]
+EOT
 EOF
   )
-
 
 
   instance_market_options {
