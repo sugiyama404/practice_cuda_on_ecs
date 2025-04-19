@@ -12,9 +12,9 @@ resource "aws_ecs_service" "pytorch_gpu_service" {
     type       = "memberOf"
     expression = "attribute:ecs.capability.gpu == true"
   }
-  depends_on = [time_sleep.wait_60_minutes]
+  depends_on = [time_sleep.wait_50_minutes]
 }
 
-resource "time_sleep" "wait_60_minutes" {
-  create_duration = "60m"
+resource "time_sleep" "wait_50_minutes" {
+  create_duration = "50m"
 }

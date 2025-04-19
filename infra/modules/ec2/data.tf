@@ -4,7 +4,7 @@ data "aws_ami" "app" {
 
   filter {
     name   = "name"
-    values = ["Deep Learning Base OSS Nvidia Driver GPU AMI *"]
+    values = ["amzn2-ami-ecs-gpu-*"]
   }
 
   filter {

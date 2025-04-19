@@ -1,3 +1,14 @@
+# AMI のデータ取得：Amazon ECS GPU 対応 AMI（Amazon Linux 2）
+data "aws_ami" "ecs_gpu" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-ecs-gpu-*"]
+  }
+}
+
 resource "aws_key_pair" "keypair" {
   key_name   = "${var.app_name}-keypair"
   public_key = file("./modules/ec2/src/keypair.pub")
@@ -8,7 +19,7 @@ resource "aws_key_pair" "keypair" {
 }
 
 resource "aws_instance" "ecs_gpu_instance" {
-  ami                    = data.aws_ami.app.id
+  ami                    = data.aws_ami.ecs_gpu.id
   instance_type          = "g4dn.xlarge"
   subnet_id              = var.public_subnet_1a_id
   vpc_security_group_ids = [var.sg_ecs_id]
@@ -26,11 +37,16 @@ resource "aws_instance" "ecs_gpu_instance" {
 echo ECS_CLUSTER=${var.ecs_cluster_name} >> /etc/ecs/ecs.config
 echo ECS_ENABLE_GPU_SUPPORT=true >> /etc/ecs/ecs.config
 
-# GPUドライバーの確認と初期化
-/usr/bin/nvidia-smi
+if systemctl list-units --type=service | grep -q "ecs"; then
+  systemctl restart ecs
+elif [ -f /etc/init/ecs.conf ]; then
+  service ecs restart
+else
+  stop ecs || true
+  start ecs
+fi
 
-# ECSエージェントを再起動して新しい設定を適用
-systemctl restart ecs
+nvidia-smi
 EOF
 
   instance_market_options {
