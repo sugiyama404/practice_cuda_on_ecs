@@ -4,7 +4,7 @@ data "aws_ami" "app" {
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-ecs-gpu-*"]
+    values = ["amzn2-ami-ecs-gpu-hvm-*-x86_64-ebs"]
   }
 
   filter {
@@ -21,25 +21,4 @@ data "aws_ami" "app" {
     name   = "root-device-type"
     values = ["ebs"]
   }
-}
-
-data "aws_ami" "amazon_linux" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-ecs-hvm-*"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"] # ← これを追加！
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["amazon"]
 }

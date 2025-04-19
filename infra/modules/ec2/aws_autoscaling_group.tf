@@ -1,41 +1,33 @@
-resource "aws_autoscaling_group" "ecs_asg" {
-  name                = "ecs-asg"
-  vpc_zone_identifier = [var.public_subnet_1a_id]
-  desired_capacity    = 1
-  max_size            = 1
-  min_size            = 1
+resource "aws_autoscaling_group" "ecs_gpu_asg" {
+  name                      = "ecs-gpu-asg"
+  desired_capacity          = 1
+  max_size                  = 1
+  min_size                  = 1
+  vpc_zone_identifier       = [var.public_subnet_1a_id]
+  health_check_type         = "EC2"
+  health_check_grace_period = 300
 
   launch_template {
-    id      = aws_launch_template.ecs_launch_template.id
+    id      = aws_launch_template.ecs_gpu_launch_template.id
     version = "$Latest"
   }
 
   tag {
     key                 = "Name"
-    value               = "ecs-instance"
+    value               = "gpu-ecs-instance"
     propagate_at_launch = true
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
+resource "aws_key_pair" "keypair" {
+  key_name   = "${var.app_name}-keypair"
+  public_key = file("./modules/ec2/src/keypair.pub")
 
-resource "aws_launch_template" "ecs_launch_template" {
-  name_prefix   = "ecs-launch-template-"
-  image_id      = data.aws_ami.amazon_linux.id
-  instance_type = "t3.micro"
-
-  iam_instance_profile {
-    name = var.instance_profile_name
+  tags = {
+    Name = "${var.app_name}-keypair"
   }
-
-  network_interfaces {
-    security_groups = [var.sg_ecs_id]
-  }
-
-  key_name = aws_key_pair.keypair.key_name
-
-  user_data = base64encode(<<-EOF
-    #!/bin/bash
-    echo ECS_CLUSTER=chatbot-cluster >> /etc/ecs/ecs.config
-  EOF
-  )
 }

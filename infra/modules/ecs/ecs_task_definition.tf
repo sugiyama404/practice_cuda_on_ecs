@@ -31,25 +31,3 @@ resource "aws_ecs_task_definition" "pytorch_gpu_task" {
     }
   ])
 }
-
-resource "aws_ecs_task_definition" "nginx" {
-  family                   = "nginx-task"
-  network_mode             = "bridge"
-  requires_compatibilities = ["EC2"]
-  cpu                      = "256"
-  memory                   = "512"
-
-  container_definitions = jsonencode([
-    {
-      name      = "nginx"
-      image     = "nginx"
-      essential = true
-      portMappings = [
-        {
-          containerPort = 80
-          hostPort      = 80
-        }
-      ]
-    }
-  ])
-}
