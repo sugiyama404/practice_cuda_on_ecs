@@ -8,13 +8,4 @@ resource "aws_ecs_service" "pytorch_gpu_service" {
   deployment_controller {
     type = "ECS"
   }
-  placement_constraints {
-    type       = "memberOf"
-    expression = "attribute:ecs.capability.gpu == true"
-  }
-  # depends_on = [time_sleep.wait_50_minutes]
 }
-
-# resource "time_sleep" "wait_50_minutes" {
-#   create_duration = "50m"
-# }

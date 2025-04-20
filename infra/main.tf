@@ -50,8 +50,8 @@ module "ec2" {
 
 # ECS
 module "ecs" {
-  source                   = "./modules/ecs"
-  app_name                 = var.app_name
-  ecs_instance_profile_arn = module.iam.ecs_instance_profile_arn
-  ai_repository_url        = module.ecr.ai_repository_url
+  source                = "./modules/ecs"
+  app_name              = var.app_name
+  iam_role_ecs_role_arn = module.iam.iam_role_ecs_role_arn
+  ai_repository_url     = module.ecr.ai_repository_url
 }

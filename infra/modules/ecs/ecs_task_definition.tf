@@ -3,8 +3,8 @@ resource "aws_ecs_task_definition" "pytorch_gpu_task" {
   family                   = "pytorch-gpu-task"
   network_mode             = "bridge"
   requires_compatibilities = ["EC2"]
-  execution_role_arn       = var.ecs_instance_profile_arn
-  task_role_arn            = var.ecs_instance_profile_arn
+  execution_role_arn       = var.iam_role_ecs_role_arn
+  task_role_arn            = var.iam_role_ecs_role_arn
 
   container_definitions = jsonencode([
     {
@@ -12,7 +12,7 @@ resource "aws_ecs_task_definition" "pytorch_gpu_task" {
       image     = "${var.ai_repository_url}:latest"
       essential = true
       cpu       = 4096,
-      memory    = 16384,
+      memory    = 15000,
 
       resourceRequirements = [
         {

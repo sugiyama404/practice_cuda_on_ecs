@@ -1,3 +1,3 @@
 variable "app_name" {}
-variable "ecs_instance_profile_arn" {}
+variable "iam_role_ecs_role_arn" {}
 variable "ai_repository_url" {}
