@@ -1,4 +1,3 @@
-# ECSサービス
 resource "aws_ecs_service" "pytorch_gpu_service" {
   name            = "pytorch-gpu-service"
   cluster         = aws_ecs_cluster.gpu_cluster.id
