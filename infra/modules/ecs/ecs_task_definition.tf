@@ -1,4 +1,3 @@
-# サンプルPyTorchタスク定義
 resource "aws_ecs_task_definition" "pytorch_gpu_task" {
   family                   = "pytorch-gpu-task"
   network_mode             = "bridge"

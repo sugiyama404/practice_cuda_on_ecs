@@ -37,3 +37,9 @@ bin/terraform_apply
 ```
 bin/terraform_destroy
 ```
+
+# Qiitaの記事
+
+以下リンクが本レポジトリーの技術記事です。
+
+[ECS on GPU EC2：ECSクラスターで動かすCUDAコンテナ基盤自動構築](https://qiita.com/sugiyama404/items/00a0634eb126329f3e25)
